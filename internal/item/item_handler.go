@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func handleItem(ds interface{}) http.Handler {
+func HandleItem(ds interface{}) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			//get the item
