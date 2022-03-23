@@ -1,7 +1,5 @@
 package main
 
-import "github.com/Jonny-Burkholder/restful-api-example/internal/item"
-
 //this is an example of how to implement a rest api that handles
 //keeping track of library items. I'm using an item interface
 

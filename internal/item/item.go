@@ -2,8 +2,7 @@ package item
 
 import (
 	"errors"
-
-	"github.com/Jonny-Burkholder/restful-api-example/internal/user"
+	"os/user"
 )
 
 var errAlreadyOut = errors.New("Item is already checked out")
