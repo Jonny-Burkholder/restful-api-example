@@ -2,7 +2,6 @@ package item
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/Jonny-Burkholder/restful-api-example/internal/data"
@@ -12,8 +11,31 @@ func GetItem(ds data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			//get the item
-			q := r.URL.Query()
-			fmt.Println(q)
+			itemType := r.URL.Query()["type"]
+			title := r.URL.Query()["title"]
+			if itemType == "dvd" {
+				for _, dvd := range ds.Inventory["dvd"] {
+					if dvd.Title == title {
+						json.NewEncoder(w).Encode(dvd)
+						return
+					}
+				}
+			} else if itemType == "tape" {
+				for _, tape := range ds.Inventory["tape"] {
+					if tape.Title == title {
+						json.NewEncoder(w).Encode(tape)
+						return
+					}
+				}
+			} else if itemType == "book" {
+				for _, book := range ds.Inventory["book"] {
+					if book.Title == title {
+						json.NewEncoder(w).Encode(book)
+						return
+					}
+				}
+			}
+			w.Write([]byte("Item not found"))
 		} else {
 			http.Error(w, "Invalid request", http.StatusBadRequest)
 		}
