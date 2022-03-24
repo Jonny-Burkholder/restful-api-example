@@ -49,16 +49,21 @@ func GetDVDs(ds data.DataStore) http.Handler {
 						return
 					}
 				}
+				//store the results that match this query
 				results := make([]*dvd, 0)
+				//range over the dvd inventory
 				for _, dvd := range ds.Inventory["dvd"] {
 				filter:
 					for key, value := range queries {
+						//if any of the criteria don't match, just skip this dvd
 						if dvd.key != value {
 							break filter
 						}
 					}
+					//if all the criteria matched, add this dvd to the results
 					results = append(results, dvd)
 				}
+				//write the results to the response writer
 				json.NewEncoder(w).Encode(results)
 				return
 			}
