@@ -52,6 +52,8 @@ var generator = item.NewGenerator()
 func makeItems() {
 	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook(generator.GetID("book"), "Moby Dick", "Hermin Melville", "Boring", "1851"))
 	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook(generator.GetID("book"), "Gardens of the Moon", "Steven Erikson", "Fantasy", "1999"))
+	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook(generator.GetID("book"), "Deadhouse Gates", "Steven Erikson", "Fantasy", "2000"))
+	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook(generator.GetID("book"), "Memories of Ice", "Steven Erikson", "Mind-Melter", "2001"))
 	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook(generator.GetID("book"), "Words of Radiance", "Brandon Sanderson", "Science Fantasy", "2014"))
 	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook(generator.GetID("book"), "Bands of Mourning", "Brandon Sanderson", "Western Science Fantasy", "2016"))
 	ds.Inventory["tape"] = append(ds.Inventory["tape"], item.NewTape(generator.GetID("tape"), "Adventures in Odyssey", "109 minutes"))
