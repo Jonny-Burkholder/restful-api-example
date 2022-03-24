@@ -61,6 +61,7 @@ func HandleTape(ds data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			//return all tapes
+			json.NewEncoder(w).Encode(ds.Inventory["tape"])
 		} else {
 			http.Error(w, "Invalid request", http.StatusBadRequest)
 		}
@@ -72,6 +73,7 @@ func HandleBook(ds data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			//return all books
+			json.NewEncoder(w).Encode(ds.Inventory["book"])
 		} else {
 			http.Error(w, "Invalid request", http.StatusBadRequest)
 		}

@@ -30,7 +30,7 @@ type dvd struct {
 }
 
 //newDVD creates and returns a dvd object
-func newDVD(title, genre, rating, release, runtime string) *dvd {
+func NewDVD(title, genre, rating, release, runtime string) *dvd {
 	return &dvd{
 		Title:        title,
 		Genre:        genre,
@@ -81,7 +81,14 @@ type tape struct {
 }
 
 //newTape creates and returns a new tape object
-func newTape(title, runtime string)
+func NewTape(title, runtime string) *tape {
+	return &tape{
+		Title:        title,
+		Runtime:      runtime,
+		CheckedOut:   false,
+		CheckedOutBy: "",
+	}
+}
 
 func (t *tape) CheckOut(user *user.User) error {
 	if t.CheckedOut {
@@ -110,6 +117,17 @@ type book struct {
 	PublishingDate string `json:"publishing_date"`
 	CheckedOut     bool   `json:"checked_out"`
 	CheckedOutBy   string `json:"checked_out_by"`
+}
+
+func NewBook(title, author, genre, pub string) *book {
+	return &book{
+		Title:          title,
+		Author:         author,
+		Genre:          genre,
+		PublishingDate: pub,
+		CheckedOut:     false,
+		CheckedOutBy:   "",
+	}
 }
 
 func (b *book) CheckOut(user *user.User) error {

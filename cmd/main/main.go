@@ -14,6 +14,9 @@ import (
 
 func main() {
 
+	makeItems()
+	ds.Users["admin"] = user.NewUser("Bob", "Jones", "therealbobjones@bju.edu")
+
 	http.Handle("/get-item", item.GetItem(ds))
 	http.Handle("/return-item", item.ReturnItem(ds))
 	http.Handle("/donate-item", item.DonateItem(ds))
@@ -36,12 +39,19 @@ func main() {
 var inventory = make(map[string][]interface{}) //this is not ideal. We really need tables
 var users = make(map[string]*user.User)
 
-type dataStore struct {
-	Inventory map[string][]*item.Item
-	Users     map[string]*user.User
-}
-
 var ds = data.DataStore{
 	Inventory: inventory,
 	Users:     users,
+}
+
+//just until we get an actual database in this business
+func makeItems() {
+	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook("Moby Dick", "Hermin Melville", "Boring", "1851"))
+	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook("Gardens of the Moon", "Steven Erikson", "Fantasy", "1999"))
+	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook("Words of Radiance", "Brandon Sanderson", "Science Fantasy", "2014"))
+	ds.Inventory["tape"] = append(ds.Inventory["tape"], item.NewTape("Adventures in Odyssey", "109 minutes"))
+	ds.Inventory["tape"] = append(ds.Inventory["tape"], item.NewTape("How to Make Friends and Influence People", "12 minutes"))
+	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD("The Matrix", "Action", "Unclear", "1999", "2-ish hours"))
+	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD("Infinity War", "Marvel", "PG-13", "2018", "149 minutes"))
+	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD("Milltown Pride", "Baseball", "G", "2011", "Literally forever"))
 }
