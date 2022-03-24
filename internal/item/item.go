@@ -6,6 +6,12 @@ import (
 	"github.com/Jonny-Burkholder/restful-api-example/internal/user"
 )
 
+const (
+	dvdpre  string = "001"
+	tapepre string = "002"
+	bookpre string = "003"
+)
+
 var errAlreadyOut = errors.New("Item is already checked out")
 var errNotCheckedOut = errors.New("Item has not been checked out")
 
@@ -20,6 +26,7 @@ type Item interface {
 }
 
 type dvd struct {
+	ID           string `json:"id"`
 	Title        string `json:"title"`
 	Genre        string `json:"genre"`
 	Rating       string `json:"rating"`
@@ -30,8 +37,9 @@ type dvd struct {
 }
 
 //newDVD creates and returns a dvd object
-func NewDVD(title, genre, rating, release, runtime string) *dvd {
+func NewDVD(id, title, genre, rating, release, runtime string) *dvd {
 	return &dvd{
+		ID:           id,
 		Title:        title,
 		Genre:        genre,
 		Rating:       rating,
@@ -74,6 +82,7 @@ func (d *dvd) ReturnItem(user *user.User) error {
 
 //tapes are boring, we'll keep them to a minimum
 type tape struct {
+	ID           string `json:"id"`
 	Title        string `json:"title"`
 	Runtime      string `json:"runtime"`
 	CheckedOut   bool   `json:"checked_out"`
@@ -81,8 +90,9 @@ type tape struct {
 }
 
 //newTape creates and returns a new tape object
-func NewTape(title, runtime string) *tape {
+func NewTape(id, title, runtime string) *tape {
 	return &tape{
+		ID:           id,
 		Title:        title,
 		Runtime:      runtime,
 		CheckedOut:   false,
@@ -111,6 +121,7 @@ func (t *tape) ReturnItem(user *user.User) error {
 }
 
 type book struct {
+	ID             string `json:"id"`
 	Title          string `json:"title"`
 	Author         string `json:"author"`
 	Genre          string `json:"genre"`
@@ -119,8 +130,9 @@ type book struct {
 	CheckedOutBy   string `json:"checked_out_by"`
 }
 
-func NewBook(title, author, genre, pub string) *book {
+func NewBook(id, title, author, genre, pub string) *book {
 	return &book{
+		ID:             id,
 		Title:          title,
 		Author:         author,
 		Genre:          genre,

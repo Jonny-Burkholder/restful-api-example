@@ -7,42 +7,6 @@ import (
 	"github.com/Jonny-Burkholder/restful-api-example/internal/data"
 )
 
-func GetItem(ds data.DataStore) http.Handler {
-	fn := func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodGet {
-			//get the item
-			itemType := r.URL.Query()["type"]
-			title := r.URL.Query()["title"]
-			if itemType == "dvd" {
-				for _, dvd := range ds.Inventory["dvd"] {
-					if dvd.Title == title {
-						json.NewEncoder(w).Encode(dvd)
-						return
-					}
-				}
-			} else if itemType == "tape" {
-				for _, tape := range ds.Inventory["tape"] {
-					if tape.Title == title {
-						json.NewEncoder(w).Encode(tape)
-						return
-					}
-				}
-			} else if itemType == "book" {
-				for _, book := range ds.Inventory["book"] {
-					if book.Title == title {
-						json.NewEncoder(w).Encode(book)
-						return
-					}
-				}
-			}
-			w.Write([]byte("Item not found"))
-		} else {
-			http.Error(w, "Invalid request", http.StatusBadRequest)
-		}
-	}
-	return http.HandlerFunc(fn)
-}
-
 func ReturnItem(ds data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
@@ -91,7 +55,7 @@ func HandleTape(ds data.DataStore) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-func HandleBook(ds data.DataStore) http.Handler {
+func GetBooks(ds data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			//return all books

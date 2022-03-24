@@ -17,13 +17,12 @@ func main() {
 	makeItems()
 	ds.Users["admin"] = user.NewUser("Bob", "Jones", "therealbobjones@bju.edu")
 
-	http.Handle("/get-item", item.GetItem(ds))
-	http.Handle("/return-item", item.ReturnItem(ds))
-	http.Handle("/donate-item", item.DonateItem(ds))
-	http.Handle("/dvd", item.HandleDVD(ds))
-	http.Handle("/tape", item.HandleTape(ds))
-	http.Handle("/book", item.HandleBook(ds))
-	http.Handle("/user", user.HandleUser(ds))
+	http.Handle("/return-", item.ReturnItem(ds))
+	http.Handle("api/donate-item/", item.DonateItem(ds))
+	http.Handle("api/dvds", item.HandleDVD(ds))
+	http.Handle("api/tapes", item.HandleTape(ds))
+	http.Handle("api/books", item.GetBooks(ds))
+	http.Handle("api/users", user.HandleUser(ds))
 
 	log.Println("Serving on port 8080")
 	http.ListenAndServe(":8080", nil)
@@ -44,14 +43,16 @@ var ds = data.DataStore{
 	Users:     users,
 }
 
+var generator = item.NewGenerator()
+
 //just until we get an actual database in this business
 func makeItems() {
-	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook("Moby Dick", "Hermin Melville", "Boring", "1851"))
-	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook("Gardens of the Moon", "Steven Erikson", "Fantasy", "1999"))
-	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook("Words of Radiance", "Brandon Sanderson", "Science Fantasy", "2014"))
-	ds.Inventory["tape"] = append(ds.Inventory["tape"], item.NewTape("Adventures in Odyssey", "109 minutes"))
-	ds.Inventory["tape"] = append(ds.Inventory["tape"], item.NewTape("How to Make Friends and Influence People", "12 minutes"))
-	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD("The Matrix", "Action", "Unclear", "1999", "2-ish hours"))
-	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD("Infinity War", "Marvel", "PG-13", "2018", "149 minutes"))
-	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD("Milltown Pride", "Baseball", "G", "2011", "Literally forever"))
+	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook(generator.GetID("book"), "Moby Dick", "Hermin Melville", "Boring", "1851"))
+	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook(generator.GetID("book"), "Gardens of the Moon", "Steven Erikson", "Fantasy", "1999"))
+	ds.Inventory["book"] = append(ds.Inventory["book"], item.NewBook(generator.GetID("book"), "Words of Radiance", "Brandon Sanderson", "Science Fantasy", "2014"))
+	ds.Inventory["tape"] = append(ds.Inventory["tape"], item.NewTape(generator.GetID("tape"), "Adventures in Odyssey", "109 minutes"))
+	ds.Inventory["tape"] = append(ds.Inventory["tape"], item.NewTape(generator.GetID("tape"), "How to Make Friends and Influence People", "12 minutes"))
+	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD(generator.GetID("dvd"), "The Matrix", "Action", "Unclear", "1999", "2-ish hours"))
+	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD(generator.GetID("dvd"), "Infinity War", "Marvel", "PG-13", "2018", "149 minutes"))
+	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD(generator.GetID("dvd"), "Milltown Pride", "Baseball", "G", "2011", "Literally forever"))
 }
