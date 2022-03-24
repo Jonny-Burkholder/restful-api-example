@@ -13,19 +13,22 @@ import (
 //keeping track of library items. I'm using an item interface
 
 func main() {
-
 	makeItems()
 	ds.Users["admin"] = user.NewUser("Bob", "Jones", "therealbobjones@bju.edu")
 
-	http.Handle("/return-", item.ReturnItem(ds))
-	http.Handle("api/donate-item/", item.DonateItem(ds))
-	http.Handle("api/dvds", item.HandleDVD(ds))
-	http.Handle("api/tapes", item.HandleTape(ds))
-	http.Handle("api/books", item.GetBooks(ds))
-	http.Handle("api/users", user.HandleUser(ds))
+	mux := http.NewServeMux()
+
+	mux.Handle("api/return-book/", item.ReturnItem(ds))
+	mux.Handle("api/return-dvd/", item.ReturnItem(ds))
+	mux.Handle("api/return-tape/", item.ReturnItem(ds))
+	mux.Handle("api/donate-item/", item.DonateItem(ds)) //should be able to tell what this is via reflection, and I don't feel like writing all the handlers out
+	mux.Handle("api/dvds", item.HandleDVD(ds))
+	mux.Handle("api/tapes", item.HandleTape(ds))
+	mux.Handle("api/books", item.GetBooks(ds))
+	mux.Handle("api/users", user.HandleUser(ds))
 
 	log.Println("Serving on port 8080")
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", mux)
 
 }
 
