@@ -22,10 +22,10 @@ func main() {
 	mux.Handle("api/return-dvd/", item.ReturnItem(ds))
 	mux.Handle("api/return-tape/", item.ReturnItem(ds))
 	mux.Handle("api/donate-item/", item.DonateItem(ds)) //should be able to tell what this is via reflection, and I don't feel like writing all the handlers out
-	mux.Handle("api/dvds", item.HandleDVD(ds))
-	mux.Handle("api/tapes", item.HandleTape(ds))
-	mux.Handle("api/books", item.GetBooks(ds))
-	mux.Handle("api/users", user.HandleUser(ds))
+	mux.Handle("api/dvds/", item.GetDVDs(ds))
+	mux.Handle("api/tapes/", item.GetTapes(ds))
+	mux.Handle("api/books/", item.GetBooks(ds))
+	mux.Handle("api/users/", user.HandleUser(ds))
 
 	log.Println("Serving on port 8080")
 	http.ListenAndServe(":8080", mux)

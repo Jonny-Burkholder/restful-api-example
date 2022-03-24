@@ -3,6 +3,7 @@ package item
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/Jonny-Burkholder/restful-api-example/internal/data"
 )
@@ -31,19 +32,45 @@ func DonateItem(ds data.DataStore) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-func HandleDVD(ds data.DataStore) http.Handler {
+func GetDVDs(ds data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
-			//return all DVDs
-			json.NewEncoder(w).Encode(ds.Inventory["dvd"])
+			queries := r.URL.Query()
+			if len(queries) == 0 {
+				//return all DVDs
+				//This doesn't really account for the pattern api/dvds/0010000000X
+				json.NewEncoder(w).Encode(ds.Inventory["dvd"])
+				return
+			} else {
+				//check that all queries are valid
+				for key, _ := range queries {
+					if _, ok := dvdParams[strings.ToLower(strings.TrimSpace(key))]; ok != true {
+						http.Error(w, "Invalid request", http.StatusBadRequest)
+						return
+					}
+				}
+				results := make([]*dvd, 0)
+				for _, dvd := range ds.Inventory["dvd"] {
+				filter:
+					for key, value := range queries {
+						if dvd.key != value {
+							break filter
+						}
+					}
+					results = append(results, dvd)
+				}
+				json.NewEncoder(w).Encode(results)
+				return
+			}
 		} else {
 			http.Error(w, "Invalid request", http.StatusBadRequest)
+			return
 		}
 	}
 	return http.HandlerFunc(fn)
 }
 
-func HandleTape(ds data.DataStore) http.Handler {
+func GetTapes(ds data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			//return all tapes
