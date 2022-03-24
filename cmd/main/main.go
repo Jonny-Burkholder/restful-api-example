@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Jonny-Burkholder/restful-api-example/internal/data"
 	"github.com/Jonny-Burkholder/restful-api-example/internal/item"
 	"github.com/Jonny-Burkholder/restful-api-example/internal/user"
 )
@@ -13,8 +14,13 @@ import (
 
 func main() {
 
-	http.Handle("/item", item.HandleItem(inventory))
-	http.Handle("/user", user.HandleUser(inventory))
+	http.Handle("/get-item", item.GetItem(ds))
+	http.Handle("/return-item", item.ReturnItem(ds))
+	http.Handle("/donate-item", item.DonateItem(ds))
+	http.Handle("/dvd", item.HandleDVD(ds))
+	http.Handle("/tape", item.HandleTape(ds))
+	http.Handle("/book", item.HandleBook(ds))
+	http.Handle("/user", user.HandleUser(ds))
 
 	log.Println("Serving on port 8080")
 	http.ListenAndServe(":8080", nil)
@@ -27,10 +33,15 @@ func main() {
 //sake, rather than something thread safe, because honestly this
 //is just an example and it will only have one person (me) using
 //it at a time. Eventually I'll convert this to MongoDB, for fun
-var inventory = make(map[string]*item.Item) //this will bite us in the butt if a book and movie have the same name. Need tables
+var inventory = make(map[string][]interface{}) //this is not ideal. We really need tables
 var users = make(map[string]*user.User)
 
 type dataStore struct {
-	inventory map[string]*item.Item
-	users     map[string]*user.User
+	Inventory map[string][]*item.Item
+	Users     map[string]*user.User
+}
+
+var ds = data.DataStore{
+	Inventory: inventory,
+	Users:     users,
 }
