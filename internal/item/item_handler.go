@@ -2,6 +2,7 @@ package item
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -46,6 +47,7 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 				return
 			} else {
 				//check that all queries are valid, and that each key only has exactly one value
+				fmt.Println(queries) //you know, for debugging
 				for key, value := range queries {
 					if _, ok := dvdParams[strings.ToLower(strings.TrimSpace(key))]; ok != true || len(value) != 1 {
 						http.Error(w, "Invalid request", http.StatusBadRequest)
