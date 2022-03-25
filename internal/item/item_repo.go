@@ -41,3 +41,5 @@ func (g *generator) GetID(which string) string {
 }
 
 var dvdParams = map[string]bool{"id": true, "title": true, "genre": true, "rating": true, "releasedate": true, "runtime": true, "checkedout": true, "checkedoutby": true}
+var tapeParams = map[string]bool{"id": true, "title": true, "runtime": true, "checkedout": true, "checkedoutby": true}
+var bookParams = map[string]bool{"id": true, "title": true, "author": true, "genre": true, "publishingdate": true, "checkedout": true, "checkedoutby": true}
