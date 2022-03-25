@@ -42,9 +42,9 @@ func GetDVDs(ds data.DataStore) http.Handler {
 				json.NewEncoder(w).Encode(ds.Inventory["dvd"])
 				return
 			} else {
-				//check that all queries are valid
-				for key, _ := range queries {
-					if _, ok := dvdParams[strings.ToLower(strings.TrimSpace(key))]; ok != true {
+				//check that all queries are valid, and that each key only has exactly one value
+				for key, value := range queries {
+					if _, ok := dvdParams[strings.ToLower(strings.TrimSpace(key))]; ok != true || len(value) != 1 {
 						http.Error(w, "Invalid request", http.StatusBadRequest)
 						return
 					}
@@ -52,16 +52,38 @@ func GetDVDs(ds data.DataStore) http.Handler {
 				//store the results that match this query
 				results := make([]*dvd, 0)
 				//range over the dvd inventory
-				for _, dvd := range ds.Inventory["dvd"] {
+				for _, v := range ds.Inventory["dvd"] {
+					item := v.(dvd)
 				filter:
 					for key, value := range queries {
 						//if any of the criteria don't match, just skip this dvd
-						if dvd.key != value {
+						var field string
+						switch strings.ToLower(strings.TrimSpace(key)) {
+						case "id":
+							field = item.ID
+						case "title":
+							field = item.Title
+						case "genre":
+							field = item.Genre
+						case "rating":
+							field = item.Rating
+						case "releasedate":
+							field = item.ReleaseDate
+						case "runtime":
+							field = item.Runtime
+						case "checkedout":
+							if item.CheckedOut == true {
+								field = "true"
+							} else {
+								field = "false"
+							}
+						}
+						if field != value[0] {
 							break filter
 						}
 					}
 					//if all the criteria matched, add this dvd to the results
-					results = append(results, dvd)
+					results = append(results, &item)
 				}
 				//write the results to the response writer
 				json.NewEncoder(w).Encode(results)

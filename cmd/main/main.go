@@ -61,4 +61,5 @@ func makeItems() {
 	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD(generator.GetID("dvd"), "The Matrix", "Action", "Unclear", "1999", "2-ish hours"))
 	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD(generator.GetID("dvd"), "Infinity War", "Marvel", "PG-13", "2018", "149 minutes"))
 	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD(generator.GetID("dvd"), "Milltown Pride", "Baseball", "G", "2011", "Literally forever"))
+	ds.Inventory["dvd"] = append(ds.Inventory["dvd"], item.NewDVD(generator.GetID("dvd"), "Mission: Impossible", "Action", "PG-13", "1996", "110 minutes"))
 }
