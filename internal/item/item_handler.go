@@ -2,8 +2,10 @@ package item
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/Jonny-Burkholder/restful-api-example/internal/data"
 )
@@ -34,6 +36,7 @@ func DonateItem(ds *data.DataStore) http.Handler {
 
 func GetDVDs(ds *data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Endpoint reached: dvds\nIP:%q\ntime:%v", r.RemoteAddr, time.Now().Unix())
 		if r.Method == http.MethodGet {
 			queries := r.URL.Query()
 			if len(queries) == 0 {
@@ -53,7 +56,7 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 				results := make([]*dvd, 0)
 				//range over the dvd inventory
 				for _, v := range ds.Inventory["dvd"] {
-					item := v.(dvd)
+					item := v.(*dvd)
 				filter:
 					for key, value := range queries {
 						//if any of the criteria don't match, just skip this dvd
@@ -85,7 +88,7 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 						}
 					}
 					//if all the criteria matched, add this dvd to the results
-					results = append(results, &item)
+					results = append(results, item)
 				}
 				//write the results to the response writer
 				json.NewEncoder(w).Encode(results)
@@ -101,6 +104,7 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 
 func GetTapes(ds *data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Endpoint reached: tapes\nIP:%q\ntime:%v", r.RemoteAddr, time.Now().Unix())
 		if r.Method == http.MethodGet {
 			queries := r.URL.Query()
 			if len(queries) == 0 {
@@ -119,7 +123,7 @@ func GetTapes(ds *data.DataStore) http.Handler {
 				results := make([]*tape, 0)
 				//range over the dvd inventory
 				for _, v := range ds.Inventory["tape"] {
-					item := v.(tape)
+					item := v.(*tape)
 				filter:
 					for key, value := range queries {
 						//if any of the criteria don't match, just skip this dvd
@@ -145,7 +149,7 @@ func GetTapes(ds *data.DataStore) http.Handler {
 						}
 					}
 					//if all the criteria matched, add this dvd to the results
-					results = append(results, &item)
+					results = append(results, item)
 				}
 				//write the results to the response writer
 				json.NewEncoder(w).Encode(results)
@@ -162,6 +166,7 @@ func GetTapes(ds *data.DataStore) http.Handler {
 func GetBooks(ds *data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
+			log.Printf("Endpoint reached: books\nIP:%q\ntime:%v", r.RemoteAddr, time.Now().Unix())
 			queries := r.URL.Query()
 			if len(queries) == 0 {
 				//return all books if there is no specific request.
@@ -182,7 +187,7 @@ func GetBooks(ds *data.DataStore) http.Handler {
 				results := make([]*book, 0)
 				//range over the dvd inventory
 				for _, v := range ds.Inventory["book"] {
-					item := v.(book)
+					item := v.(*book)
 				filter:
 					for key, value := range queries {
 						//if any of the criteria don't match, just skip this dvd
@@ -212,7 +217,7 @@ func GetBooks(ds *data.DataStore) http.Handler {
 						}
 					}
 					//if all the criteria matched, add this dvd to the results
-					results = append(results, &item)
+					results = append(results, item)
 				}
 				//write the results to the response writer
 				json.NewEncoder(w).Encode(results)
