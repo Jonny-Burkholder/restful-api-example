@@ -8,7 +8,7 @@ import (
 	"github.com/Jonny-Burkholder/restful-api-example/internal/data"
 )
 
-func ReturnItem(ds data.DataStore) http.Handler {
+func ReturnItem(ds *data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			//return item
@@ -21,7 +21,7 @@ func ReturnItem(ds data.DataStore) http.Handler {
 
 //DonateItem is here so that there's an example of using
 //a post request
-func DonateItem(ds data.DataStore) http.Handler {
+func DonateItem(ds *data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			//donate item
@@ -32,7 +32,7 @@ func DonateItem(ds data.DataStore) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-func GetDVDs(ds data.DataStore) http.Handler {
+func GetDVDs(ds *data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			queries := r.URL.Query()
@@ -99,7 +99,7 @@ func GetDVDs(ds data.DataStore) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-func GetTapes(ds data.DataStore) http.Handler {
+func GetTapes(ds *data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			queries := r.URL.Query()
@@ -159,7 +159,7 @@ func GetTapes(ds data.DataStore) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-func GetBooks(ds data.DataStore) http.Handler {
+func GetBooks(ds *data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodGet {
 			queries := r.URL.Query()
