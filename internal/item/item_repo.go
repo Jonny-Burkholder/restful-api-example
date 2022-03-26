@@ -30,10 +30,13 @@ func (g *generator) GetID(which string) string {
 	switch which {
 	case "dvd":
 		s = fmt.Sprintf("%08d", g.dvd)
+		g.dvd++
 	case "tape":
 		s = fmt.Sprintf("%08d", g.tape)
+		g.tape++
 	case "book":
 		s = fmt.Sprintf("%08d", g.book)
+		g.book++
 	default:
 		return fmt.Sprintf("%q is not a valid type. Please enter \"dvd\", \"tape\", or \"book\"", which)
 	}

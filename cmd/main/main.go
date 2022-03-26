@@ -23,6 +23,7 @@ func main() {
 	mux.Handle("/api/return-tape/", item.ReturnItem(ds))
 	mux.Handle("/api/donate-item/", item.DonateItem(ds)) //should be able to tell what this is via reflection, and I don't feel like writing all the handlers out
 	mux.Handle("/api/dvds", item.GetDVDs(ds))
+	mux.Handle("/api/dvds/", item.GetDVDByID(ds))
 	mux.Handle("/api/tapes", item.GetTapes(ds))
 	mux.Handle("/api/books", item.GetBooks(ds))
 	mux.Handle("/api/users", user.HandleUser(ds))

@@ -2,7 +2,6 @@ package item
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
@@ -47,7 +46,7 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 				return
 			} else {
 				//check that all queries are valid, and that each key only has exactly one value
-				fmt.Println(queries) //you know, for debugging
+				log.Println(queries) //you know, for debugging
 				for key, value := range queries {
 					if _, ok := dvdParams[strings.ToLower(strings.TrimSpace(key))]; ok != true || len(value) != 1 {
 						http.Error(w, "Invalid request", http.StatusBadRequest)
@@ -59,9 +58,11 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 				//range over the dvd inventory
 				for _, v := range ds.Inventory["dvd"] {
 					item := v.(*dvd)
-				filter:
+					//if the field meets the criteria, add will be true
+					var add bool
 					for key, value := range queries {
 						//if any of the criteria don't match, just skip this dvd
+						log.Printf("Key: %s, Value: %v\n", key, value)
 						var field string
 						switch strings.ToLower(strings.TrimSpace(key)) {
 						case "id":
@@ -85,12 +86,17 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 						case "checkedoutby":
 							field = item.CheckedOutBy
 						}
-						if field != value[0] {
-							break filter
+						if strings.ToLower(strings.TrimSpace(field)) != value[0] {
+							log.Printf("Field: %v, Value: %v", field, value[0])
+							add = false
 						}
 					}
 					//if all the criteria matched, add this dvd to the results
-					results = append(results, item)
+					if !add {
+						//do nothing
+					} else {
+						results = append(results, item)
+					}
 				}
 				//write the results to the response writer
 				json.NewEncoder(w).Encode(results)
@@ -100,6 +106,33 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 			http.Error(w, "Invalid request", http.StatusBadRequest)
 			return
 		}
+	}
+	return http.HandlerFunc(fn)
+}
+
+//GetDVDByID does what it says on the tin. This handles the /api/dvds/ url
+func GetDVDByID(ds *data.DataStore) http.Handler {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Endpoint reached: DVD by ID")
+		if r.Method != http.MethodGet {
+			http.Error(w, "Invalid request", http.StatusBadRequest)
+			return
+		}
+		id := r.URL.Path[len("/api/dvds/"):]
+		if len(id) < 1 {
+			json.NewEncoder(w).Encode(ds.Inventory["dvd"])
+			return
+		}
+		log.Printf("DVD by ID requested: %s\n", id)
+		res := &dvd{}
+		for _, v := range ds.Inventory["dvd"] {
+			disk := v.(*dvd)
+			if disk.ID == id {
+				res = disk
+				break
+			}
+		}
+		json.NewEncoder(w).Encode(res)
 	}
 	return http.HandlerFunc(fn)
 }
