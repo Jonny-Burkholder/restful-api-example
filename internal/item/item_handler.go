@@ -59,10 +59,9 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 				for _, v := range ds.Inventory["dvd"] {
 					item := v.(*dvd)
 					//if the field meets the criteria, add will be true
-					var add bool
+					add := true
 					for key, value := range queries {
 						//if any of the criteria don't match, just skip this dvd
-						log.Printf("Key: %s, Value: %v\n", key, value)
 						var field string
 						switch strings.ToLower(strings.TrimSpace(key)) {
 						case "id":
@@ -87,7 +86,7 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 							field = item.CheckedOutBy
 						}
 						if strings.ToLower(strings.TrimSpace(field)) != value[0] {
-							log.Printf("Field: %v, Value: %v", field, value[0])
+							log.Printf("Field: %v, Value: %v", strings.ToLower(strings.TrimSpace(field)), value[0])
 							add = false
 						}
 					}
