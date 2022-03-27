@@ -16,9 +16,16 @@ func ReturnItem(ds *data.DataStore) http.Handler {
 			//return item
 		} else {
 			http.Error(w, "Invalid request", http.StatusBadRequest)
+			return
 		}
 	}
 	return http.HandlerFunc(fn)
+}
+
+func CheckOutItem(ds *data.DataStore) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		//check item out
+	})
 }
 
 //DonateItem is here so that there's an example of using
@@ -27,14 +34,16 @@ func DonateItem(ds *data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == http.MethodPost {
 			//donate item
+			//I'll probably never actually implement this, since it's kind of bad practice,
+			//although I think it would be really fun
 		} else {
-			http.Error(w, "Invalid request", http.StatusBadRequest)
+			http.Error(w, "This method is not supported for this endpoint", http.StatusMethodNotAllowed)
 		}
 	}
 	return http.HandlerFunc(fn)
 }
 
-func GetDVDs(ds *data.DataStore) http.Handler {
+func GetDVDs(ds *data.DataStore, g *generator) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Endpoint reached: dvds\nIP:%q\ntime:%v", r.RemoteAddr, time.Now().Unix())
 		if r.Method == http.MethodGet {
@@ -97,12 +106,28 @@ func GetDVDs(ds *data.DataStore) http.Handler {
 						results = append(results, item)
 					}
 				}
+				//if there are no results, send a 204 error
+				if len(results) < 1 {
+					http.Error(w, "No results found", http.StatusNoContent)
+					return
+				}
 				//write the results to the response writer
 				json.NewEncoder(w).Encode(results)
 				return
 			}
+		} else if r.Method == http.MethodPost {
+			//handle post request
+			var disk *dvd
+			err := json.NewDecoder(r.Body).Decode(disk)
+			if err != nil {
+				http.Error(w, "Invalid Request", http.StatusBadRequest)
+				return
+			}
+			disk.ID = g.GetID("dvd")
+			//Should probably check for duplicates first, but I don't think it matters much
+			ds.Inventory["dvd"] = append(ds.Inventory["dvd"], disk)
 		} else {
-			http.Error(w, "Invalid request", http.StatusBadRequest)
+			http.Error(w, "This method is not supported", http.StatusNotImplemented)
 			return
 		}
 	}
@@ -114,7 +139,7 @@ func GetDVDByID(ds *data.DataStore) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Endpoint reached: DVD by ID")
 		if r.Method != http.MethodGet {
-			http.Error(w, "Invalid request", http.StatusBadRequest)
+			http.Error(w, "This method is not supported for this endpoint", http.StatusMethodNotAllowed)
 			return
 		}
 		id := r.URL.Path[len("/api/dvds/"):]
@@ -190,7 +215,7 @@ func GetTapes(ds *data.DataStore) http.Handler {
 				return
 			}
 		} else {
-			http.Error(w, "Invalid request", http.StatusBadRequest)
+			http.Error(w, "This method is not supported", http.StatusNotImplemented)
 			return
 		}
 	}
@@ -258,7 +283,7 @@ func GetBooks(ds *data.DataStore) http.Handler {
 				return
 			}
 		} else {
-			http.Error(w, "Invalid request", http.StatusBadRequest)
+			http.Error(w, "This method is not supported", http.StatusNotImplemented)
 			return
 		}
 	}
