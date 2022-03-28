@@ -95,7 +95,7 @@ func GetDVDs(ds *data.DataStore, g *generator) http.Handler {
 							field = item.CheckedOutBy
 						}
 						if strings.ToLower(strings.TrimSpace(field)) != value[0] {
-							log.Printf("Field: %v, Value: %v", strings.ToLower(strings.TrimSpace(field)), value[0])
+
 							add = false
 						}
 					}
@@ -107,19 +107,25 @@ func GetDVDs(ds *data.DataStore, g *generator) http.Handler {
 					}
 				}
 				//if there are no results, send a 204 error
+				log.Println(len(results))
 				if len(results) < 1 {
+					log.Println(results)
 					http.Error(w, "No results found", http.StatusNoContent)
 					return
+				} else {
+					//write the results to the response writer
+					json.NewEncoder(w).Encode(results)
+					return
 				}
-				//write the results to the response writer
-				json.NewEncoder(w).Encode(results)
-				return
 			}
 		} else if r.Method == http.MethodPost {
 			//handle post request
-			var disk *dvd
+			log.Println(r.URL.Query())
+			disk := newBlankDVD()
+			log.Println(disk)
 			err := json.NewDecoder(r.Body).Decode(disk)
 			if err != nil {
+				log.Println(err)
 				http.Error(w, "Invalid Request", http.StatusBadRequest)
 				return
 			}

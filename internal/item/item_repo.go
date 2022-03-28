@@ -13,7 +13,8 @@ type generator struct {
 //NewGenerator returns a new generator object.
 //Note that because this is just an example, and
 //not a commercial product, this is just going to
-//start with ones no matter what
+//start with ones no matter what. Also, it's not
+//thread safe
 func NewGenerator() *generator {
 	return &generator{
 		dvd:  1,

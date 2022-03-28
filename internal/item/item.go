@@ -36,7 +36,7 @@ type dvd struct {
 	CheckedOutBy string `json:"checked_out_by"`
 }
 
-//newDVD creates and returns a dvd object
+//NewDVD creates and returns a dvd object
 func NewDVD(id, title, genre, rating, release, runtime string) *dvd {
 	return &dvd{
 		ID:           id,
@@ -47,6 +47,20 @@ func NewDVD(id, title, genre, rating, release, runtime string) *dvd {
 		Runtime:      runtime,
 		CheckedOut:   false,
 		CheckedOutBy: "", //the string field probably makes the bool unneccessary, but we'll roll with it
+	}
+}
+
+//newBlankDVD returns an empty dvd object
+func newBlankDVD() *dvd {
+	return &dvd{
+		ID:           "",
+		Title:        "",
+		Genre:        "",
+		Rating:       "",
+		ReleaseDate:  "",
+		Runtime:      "",
+		CheckedOut:   false,
+		CheckedOutBy: "",
 	}
 }
 
