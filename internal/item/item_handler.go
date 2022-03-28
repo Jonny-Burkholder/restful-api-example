@@ -126,6 +126,8 @@ func GetDVDs(ds *data.DataStore, g *generator) http.Handler {
 			disk.ID = g.GetID("dvd")
 			//Should probably check for duplicates first, but I don't think it matters much
 			ds.Inventory["dvd"] = append(ds.Inventory["dvd"], disk)
+			log.Println("Post request handled successfully")
+			log.Println(ds.Inventory["dvd"]...)
 		} else {
 			http.Error(w, "This method is not supported", http.StatusNotImplemented)
 			return
